@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -23,10 +24,8 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<CustomerResponseDto> save(@RequestBody CustomerRequestDto customerRequestDto){
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class));
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerResponseDto save(@RequestBody CustomerRequestDto customerRequestDto){
+        return mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class);
     }
-
 }
