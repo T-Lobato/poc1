@@ -19,4 +19,9 @@ public class CustomerService {
     public Customer save(CustomerRequestDto customerRequestDto) {
         return customerRepository.save(mapper.map(customerRequestDto, Customer.class));
     }
+
+    public Customer findById(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+    }
 }
