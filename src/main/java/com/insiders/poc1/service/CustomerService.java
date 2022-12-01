@@ -1,11 +1,11 @@
 package com.insiders.poc1.service;
 
 import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
-import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -29,5 +29,11 @@ public class CustomerService {
 
     public List<Customer> findAll() {
         return customerRepository.findAll();
+    }
+    @Transactional
+    public void deleteById(Long id) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        customerOptional.orElseThrow(() -> new RuntimeException("Customer not found!"));
+        customerRepository.deleteById(id);
     }
 }
