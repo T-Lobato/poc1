@@ -3,6 +3,8 @@ package com.insiders.poc1.controller;
 import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
 import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.service.CustomerService;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,15 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponseDto findById(@PathVariable Long id){
         return mapper.map(customerService.findById(id), CustomerResponseDto.class);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerResponseDto> findAll(){
+        return customerService.findAll()
+                .stream()
+                .map(n -> (mapper.map(n, CustomerResponseDto.class)))
+                .collect(Collectors.toList());
     }
 
 
