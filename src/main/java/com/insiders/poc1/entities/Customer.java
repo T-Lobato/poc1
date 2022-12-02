@@ -1,7 +1,10 @@
 package com.insiders.poc1.entities;
 
+import com.insiders.poc1.enums.DocumentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +25,11 @@ public class Customer {
     private String name;
 
     @Column(nullable = false, unique = true)
-    private String cpf;
+    private String document;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DocumentType documentType;
 
     @Column(nullable = false, unique = true)
     private String email;
