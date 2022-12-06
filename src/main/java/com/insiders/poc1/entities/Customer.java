@@ -27,11 +27,11 @@ public class Customer {
 
     private String name;
 
-    private String document;
-
     @Column(name = "document_type")
     @Enumerated(EnumType.STRING)
     private DocumentType documentType;
+
+    private String document;
 
     private String email;
 

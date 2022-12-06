@@ -27,9 +27,6 @@ public class AddressController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AddressResponseDto save(@RequestBody AddressRequestDto addressRequestDto){
-        Customer customer = customerService.findById(addressRequestDto.getCustomerRef());
-        var address = mapper.map(addressRequestDto, Address.class);
-        address.setCustomer(customer);
-        return mapper.map(addressService.save(address), AddressResponseDto.class);
+        return mapper.map(addressService.save(addressRequestDto), AddressResponseDto.class);
     }
 }
