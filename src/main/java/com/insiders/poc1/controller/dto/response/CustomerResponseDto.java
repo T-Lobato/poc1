@@ -1,15 +1,15 @@
 package com.insiders.poc1.controller.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.insiders.poc1.entities.Address;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter @Setter
 public class CustomerResponseDto {
 
     private Long id;
     private String name;
     private String email;
+    private List<Address> addressList;
 }
