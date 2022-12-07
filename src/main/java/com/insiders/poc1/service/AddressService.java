@@ -21,11 +21,18 @@ public class AddressService {
     @Transactional
     public Address save(Address address, Long customerId) {
         Customer customer = customerService.findById(customerId);
+
+        if(customer.getAddressList().isEmpty()) {
+            address.setMainAddress(true);
+        }
+
         if(customer.getAddressList().size() < 5) {
             address.setCustomer(customer);
             return addressRepository.save(address);
         } else {
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"cannot add an address, this customer's address limit has been exceeded");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST ,
+                    "cannot add an address, this customer's address limit has been exceeded");
         }
     }
 

@@ -39,5 +39,5 @@ public class Customer {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
-    private List<Address> addressList = new ArrayList<>();
+    private List<Address> addressList;
 }
