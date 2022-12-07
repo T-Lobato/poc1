@@ -16,6 +16,7 @@ public class AddressResponseDto {
     private String street;
     private String number;
     private String zipCode;
+    private boolean mainAddress;
 
 
 

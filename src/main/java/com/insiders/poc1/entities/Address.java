@@ -39,4 +39,8 @@ public class Address {
 
     @Column(name = "zip_code")
     private String zipCode;
+
+    @Column(name = "main_address")
+    private boolean mainAddress;
+
 }
