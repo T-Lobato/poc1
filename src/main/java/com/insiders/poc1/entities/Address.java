@@ -35,7 +35,7 @@ public class Address {
 
     private String street;
 
-    private String number;
+    private String houseNumber;
 
     @Column(name = "zip_code")
     private String zipCode;
