@@ -70,4 +70,20 @@ public class AddressService {
         address.setMainAddress(true);
         addressRepository.save(address);
     }
+
+    @Transactional
+    public void deleteById(Long id) {
+        try {
+            Address address = findById(id);
+            if(!address.isMainAddress()) {
+                addressRepository.deleteById(id);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The main address can't be deleted");
+            }
+        }
+        catch (ResponseStatusException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Address not found!");
+        }
+
+    }
 }
