@@ -128,7 +128,6 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .mvn/wrapper
 
-src/main/resources/application-dev.yml
 /config/.env
 
 mvnw
