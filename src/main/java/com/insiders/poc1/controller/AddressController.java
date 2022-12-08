@@ -7,6 +7,7 @@ import com.insiders.poc1.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,5 +50,11 @@ public class AddressController {
     @ResponseStatus(HttpStatus.OK)
     public AddressResponseDto findById(@PathVariable Long id){
         return mapper.map(addressService.findById(id), AddressResponseDto.class);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id){
+        addressService.deleteById(id);
     }
 }
