@@ -37,16 +37,10 @@ public class CustomerService {
         customerOptional.orElseThrow(() -> new RuntimeException("Customer not found!"));
         customerRepository.deleteById(id);
     }
-
+    @Transactional
     public Customer update(CustomerRequestDto customerRequestDto){
-        if(existById(customerRequestDto.getId())){
-            return customerRepository.save(mapper.map(customerRequestDto, Customer.class));
-        } else {
-            throw new RuntimeException("Customer doesn't exist!");
-        }
-    }
-
-    private boolean existById(Long id) {
-        return customerRepository.existsById(id);
+        Customer customer = findById(customerRequestDto.getId());
+        mapper.map(customerRequestDto, customer);
+        return customer;
     }
 }
