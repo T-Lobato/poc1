@@ -4,22 +4,21 @@ import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.MainAddressRequestDto;
 import com.insiders.poc1.entities.Address;
 import com.insiders.poc1.entities.Customer;
+import com.insiders.poc1.exception.AddressLimitExceededException;
+import com.insiders.poc1.exception.MainAddressDeleteException;
+import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.repository.AddressRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AddressService {
 
     private final AddressRepository addressRepository;
-
     private final CustomerService customerService;
-
     private final ModelMapper mapper;
 
     @Transactional
@@ -30,14 +29,11 @@ public class AddressService {
         if (customer.getAddressList().isEmpty()) {
             address.setMainAddress(true);
         }
-
         if (customer.getAddressList().size() < 5) {
             address.setCustomer(customer);
             return addressRepository.save(address);
         } else {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "cannot add an address, this customer's address limit has been exceeded");
+            throw new AddressLimitExceededException("Cannot add an address, this customer's address limit has been exceeded!");
         }
     }
 
@@ -54,7 +50,7 @@ public class AddressService {
     }
 
     public Address findById(Long id) {
-        return addressRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not Found!"));
+        return addressRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Address not found!"));
     }
 
     @Transactional
@@ -73,17 +69,10 @@ public class AddressService {
 
     @Transactional
     public void deleteById(Long id) {
-        try {
-            Address address = findById(id);
-            if(!address.isMainAddress()) {
-                addressRepository.deleteById(id);
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The main address can't be deleted");
-            }
+        Address address = findById(id);
+        if(address.isMainAddress()) {
+            throw new MainAddressDeleteException("The main address can't be deleted!");
         }
-        catch (ResponseStatusException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Address not found!");
-        }
-
+        addressRepository.delete(address);
     }
 }

@@ -41,7 +41,7 @@ public class AddressController {
     @PatchMapping("/turn-into-main-address/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AddressResponseDto updateMainAddress(@PathVariable Long id){
-        var mainAddressRequestDto = MainAddressRequestDto.builder().id(id).build();
+        var mainAddressRequestDto = new MainAddressRequestDto(id);
         addressService.updateMainAddress(mainAddressRequestDto);
         return mapper.map(addressService.findById(id), AddressResponseDto.class);
     }
