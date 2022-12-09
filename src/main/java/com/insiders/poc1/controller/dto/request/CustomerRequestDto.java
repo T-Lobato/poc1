@@ -1,7 +1,7 @@
 package com.insiders.poc1.controller.dto.request;
 
 import com.insiders.poc1.entities.Address;
-import com.insiders.poc1.enums.DocumentType;
+import com.insiders.poc1.enums.PersonType;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ public class CustomerRequestDto {
     private Long id;
     private String name;
     private String document;
-    private DocumentType documentType;
+    private PersonType personType;
     private String email;
     private String phoneNumber;
     private List<Address> addressList;

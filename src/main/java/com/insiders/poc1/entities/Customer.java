@@ -1,6 +1,6 @@
 package com.insiders.poc1.entities;
 
-import com.insiders.poc1.enums.DocumentType;
+import com.insiders.poc1.enums.PersonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,7 +28,7 @@ public class Customer {
 
     @Column(name = "document_type")
     @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
+    private PersonType personType;
 
     private String document;
 
