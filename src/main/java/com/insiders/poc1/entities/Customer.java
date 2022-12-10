@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,5 +39,5 @@ public class Customer {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
-    private List<Address> addressList;
+    private List<Address> addressList = new ArrayList<>();
 }
