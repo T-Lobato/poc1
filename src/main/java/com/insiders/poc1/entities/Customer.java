@@ -31,8 +31,10 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private PersonType personType;
 
+    @Column(unique = true)
     private String document;
 
+    @Column(unique = true)
     private String email;
 
     @Column(name = "phone_number")
