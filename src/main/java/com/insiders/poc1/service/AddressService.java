@@ -23,7 +23,7 @@ public class AddressService {
 
     @Transactional
     public Address save(AddressRequestDto addressRequestDto) {
-        Customer customer = customerService.findById(addressRequestDto.getCustomer().getId());
+        Customer customer = customerService.findById(addressRequestDto.getCustomerId());
         Address address = mapper.map(addressRequestDto, Address.class);
 
         if (customer.getAddressList().isEmpty()) {

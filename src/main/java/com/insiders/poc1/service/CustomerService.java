@@ -37,8 +37,8 @@ public class CustomerService {
         customerRepository.delete(customer);
     }
     @Transactional
-    public Customer update(CustomerRequestDto customerRequestDto){
-        Customer customer = findById(customerRequestDto.getId());
+    public Customer update(CustomerRequestDto customerRequestDto, Long id){
+        Customer customer = findById(id);
         mapper.map(customerRequestDto, customer);
         return customer;
     }

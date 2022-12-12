@@ -3,6 +3,7 @@ package com.insiders.poc1.controller;
 import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
 import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.service.CustomerService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,7 +31,7 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerResponseDto save(@RequestBody CustomerRequestDto customerRequestDto){
+    public CustomerResponseDto save(@RequestBody @Valid CustomerRequestDto customerRequestDto){
         return mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class);
     }
 
@@ -57,9 +58,8 @@ public class CustomerController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerResponseDto update(@PathVariable Long id, @RequestBody CustomerRequestDto customerRequestDto){
-        customerRequestDto.setId(id);
-        var customer = customerService.update(customerRequestDto);
+    public CustomerResponseDto update(@PathVariable Long id, @RequestBody @Valid CustomerRequestDto customerRequestDto){
+        var customer = customerService.update(customerRequestDto, id);
         return mapper.map(customer, CustomerResponseDto.class);
     }
 }

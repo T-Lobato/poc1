@@ -1,6 +1,6 @@
 package com.insiders.poc1.entities;
 
-import com.insiders.poc1.enums.DocumentType;
+import com.insiders.poc1.enums.PersonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,15 +29,17 @@ public class Customer {
 
     @Column(name = "document_type")
     @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
+    private PersonType personType;
 
+    @Column(unique = true)
     private String document;
 
+    @Column(unique = true)
     private String email;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
-    private List<Address> addressList;
+    private List<Address> addressList = new ArrayList<>();
 }
