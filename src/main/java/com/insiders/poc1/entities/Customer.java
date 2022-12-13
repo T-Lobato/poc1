@@ -1,6 +1,7 @@
 package com.insiders.poc1.entities;
 
 import com.insiders.poc1.enums.PersonType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,6 +41,6 @@ public class Customer {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.EAGER)
     private List<Address> addressList = new ArrayList<>();
 }
