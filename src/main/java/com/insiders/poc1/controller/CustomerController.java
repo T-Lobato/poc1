@@ -6,9 +6,12 @@ import com.insiders.poc1.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,11 +52,13 @@ public class CustomerController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Find all customers.")
-    public List<CustomerResponseDto> findAll(){
-        return customerService.findAll()
-                .stream()
-                .map(n -> (mapper.map(n, CustomerResponseDto.class)))
-                .toList();
+    public Page<CustomerResponseDto> findAll(@PageableDefault(
+            page = 0,
+            size=3,
+            sort={"name"},
+            direction = Sort.Direction.ASC) Pageable pageable){
+                return customerService.findAll(pageable)
+                .map(n -> (mapper.map(n, CustomerResponseDto.class)));
     }
 
     @DeleteMapping("/{id}")

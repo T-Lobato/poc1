@@ -27,5 +27,5 @@ public class AddressRequestDto {
 
     @NotBlank(message = "zipCode is a required field!")
     @Length(min = 8, max = 8)
-    private String zipCode;
+    private String zipCode; //TODO - Mudar variável para Integer
 }
