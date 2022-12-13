@@ -4,6 +4,7 @@ import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.MainAddressRequestDto;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.service.AddressService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -28,13 +29,13 @@ public class AddressController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AddressResponseDto save(@RequestBody AddressRequestDto addressRequestDto){
+    public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto){
         return mapper.map(addressService.save(addressRequestDto), AddressResponseDto.class);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AddressResponseDto update(@PathVariable Long id, @RequestBody AddressRequestDto addressRequestDto){
+    public AddressResponseDto update(@PathVariable Long id, @RequestBody @Valid AddressRequestDto addressRequestDto){
         return mapper.map(addressService.update(addressRequestDto, id), AddressResponseDto.class);
     }
 
