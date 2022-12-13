@@ -5,9 +5,10 @@ import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +28,8 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));
     }
 
-    public List<Customer> findAll() {
-        return customerRepository.findAll();
+    public Page<Customer> findAll(Pageable pageable) {
+        return customerRepository.findAll(pageable);
     }
 
     @Transactional

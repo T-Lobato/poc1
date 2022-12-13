@@ -40,5 +40,5 @@ public class CustomerRequestDto implements Serializable {
 
     @NotNull @NotEmpty
     @Length(min = 10, max = 11)
-    private String phoneNumber;
+    private String phoneNumber; //TODO mudar variável para Integer
 }
