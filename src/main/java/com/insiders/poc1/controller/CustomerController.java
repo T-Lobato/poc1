@@ -55,6 +55,7 @@ public class CustomerController {
     public Page<CustomerResponseDto> findAll(@PageableDefault(
             page = 0,
             size=3,
+            sort={"name"},
             direction = Sort.Direction.ASC) Pageable pageable){
                 return customerService.findAll(pageable)
                 .map(n -> (mapper.map(n, CustomerResponseDto.class)));
