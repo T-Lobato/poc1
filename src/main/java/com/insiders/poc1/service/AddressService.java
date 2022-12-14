@@ -1,7 +1,7 @@
 package com.insiders.poc1.service;
 
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
-import com.insiders.poc1.controller.dto.request.MainAddressRequestDto;
+import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.entities.Address;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.exception.AddressLimitExceededException;
@@ -22,8 +22,8 @@ public class AddressService {
     private final ModelMapper mapper;
 
     @Transactional
-    public Address save(AddressRequestDto addressRequestDto) {
-        Customer customer = customerService.findById(addressRequestDto.getCustomerRef());
+    public AddressResponseDto save(AddressRequestDto addressRequestDto) {
+        Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
         Address address = mapper.map(addressRequestDto, Address.class);
 
         if (customer.getAddressList().isEmpty()) {
@@ -31,31 +31,34 @@ public class AddressService {
         }
         if (customer.getAddressList().size() < 5) {
             address.setCustomer(customer);
-            return addressRepository.save(address);
+            return mapper.map(addressRepository.save(address), AddressResponseDto.class);
         } else {
             throw new AddressLimitExceededException("Cannot add an address, this customer's address limit has been exceeded!");
         }
     }
 
     @Transactional
-    public Address update(AddressRequestDto addressRequestDto, Long id) {
-        Address address = findById(id);
+    public AddressResponseDto update(AddressRequestDto addressRequestDto, Long id) {
+        Address address = mapper.map(findById(id), Address.class);
         address.setState(addressRequestDto.getState());
         address.setCity(addressRequestDto.getCity());
         address.setDistrict(addressRequestDto.getDistrict());
         address.setStreet(addressRequestDto.getStreet());
         address.setHouseNumber(addressRequestDto.getHouseNumber());
         address.setZipCode(addressRequestDto.getZipCode());
-        return addressRepository.save(address);
+        return mapper.map(addressRepository.save(address), AddressResponseDto.class);
     }
 
-    public Address findById(Long id) {
-        return addressRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Address not found!"));
+    public AddressResponseDto findById(Long id) {
+        return mapper.map(addressRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),
+                AddressResponseDto.class);
     }
 
     @Transactional
-    public void updateMainAddress(MainAddressRequestDto mainAddressRequestDto) {
-        Address address = findById(mainAddressRequestDto.getId());
+    public void updateMainAddress(Long id) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found!"));
 
         address.getCustomer().getAddressList()
                 .forEach(n -> {
@@ -69,7 +72,7 @@ public class AddressService {
 
     @Transactional
     public void deleteById(Long id) {
-        Address address = findById(id);
+        Address address = mapper.map(findById(id), Address.class);
         if(address.isMainAddress()) {
             throw new MainAddressDeleteException("The main address can't be deleted!");
         }
