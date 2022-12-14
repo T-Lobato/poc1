@@ -1,7 +1,6 @@
 package com.insiders.poc1.controller;
 
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
-import com.insiders.poc1.controller.dto.request.MainAddressRequestDto;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,30 +33,29 @@ public class AddressController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save an address")
     public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto){
-        return mapper.map(addressService.save(addressRequestDto), AddressResponseDto.class);
+        return addressService.save(addressRequestDto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update an address")
     public AddressResponseDto update(@PathVariable Long id, @RequestBody @Valid AddressRequestDto addressRequestDto){
-        return mapper.map(addressService.update(addressRequestDto, id), AddressResponseDto.class);
+        return addressService.update(addressRequestDto, id);
     }
 
     @PatchMapping("/turn-into-main-address/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update an address to main")
     public AddressResponseDto updateMainAddress(@PathVariable Long id){
-        var mainAddressRequestDto = new MainAddressRequestDto(id);
-        addressService.updateMainAddress(mainAddressRequestDto);
-        return mapper.map(addressService.findById(id), AddressResponseDto.class);
+        addressService.updateMainAddress(id);
+        return addressService.findById(id);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Find an address")
     public AddressResponseDto findById(@PathVariable Long id){
-        return mapper.map(addressService.findById(id), AddressResponseDto.class);
+        return addressService.findById(id);
     }
 
     @DeleteMapping("/{id}")

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,14 +38,14 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a customer")
     public CustomerResponseDto save(@RequestBody @Valid CustomerRequestDto customerRequestDto){
-        return mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class);
+        return customerService.save(customerRequestDto);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Find a customer")
     public CustomerResponseDto findById(@PathVariable Long id){
-        return mapper.map(customerService.findById(id), CustomerResponseDto.class);
+        return customerService.findById(id);
     }
 
     @GetMapping
@@ -57,22 +56,20 @@ public class CustomerController {
             size=3,
             sort={"name"},
             direction = Sort.Direction.ASC) Pageable pageable){
-                return customerService.findAll(pageable)
-                .map(n -> (mapper.map(n, CustomerResponseDto.class)));
+                return customerService.findAll(pageable);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a customer")
-    public ResponseEntity<Object> deleteById(@PathVariable Long id){
+    public void deleteById(@PathVariable Long id){
         customerService.deleteById(id);
-        return ResponseEntity.ok().body("Customer deleted successfully!");
     }
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update a customer")
     public CustomerResponseDto update(@PathVariable Long id, @RequestBody @Valid CustomerRequestDto customerRequestDto){
-        var customer = customerService.update(customerRequestDto, id);
-        return mapper.map(customer, CustomerResponseDto.class);
+        return customerService.update(customerRequestDto, id);
     }
 }
