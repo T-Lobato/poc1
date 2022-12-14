@@ -1,6 +1,6 @@
 package com.insiders.poc1.controller.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SwaggerConfig { //TODO - Verificar o motivo do não funcionamento.
+public class SwaggerConfig {
 
     @Bean
     public OpenAPI springShopOpenAPI(){

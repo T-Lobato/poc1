@@ -8,7 +8,7 @@ import com.insiders.poc1.exception.AddressLimitExceededException;
 import com.insiders.poc1.exception.MainAddressDeleteException;
 import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.repository.AddressRepository;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

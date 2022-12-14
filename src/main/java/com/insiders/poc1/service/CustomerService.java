@@ -4,7 +4,7 @@ import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.repository.CustomerRepository;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

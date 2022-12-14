@@ -1,8 +1,8 @@
 package com.insiders.poc1.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 @Repository
