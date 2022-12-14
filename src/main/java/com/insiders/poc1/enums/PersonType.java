@@ -3,7 +3,6 @@ package com.insiders.poc1.enums;
 import com.insiders.poc1.shared.validation.CnpjGroup;
 import com.insiders.poc1.shared.validation.CpfGroup;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum PersonType {

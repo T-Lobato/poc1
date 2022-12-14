@@ -5,7 +5,7 @@ import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -37,21 +37,21 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Save a customer.")
+    @Operation(summary = "Save a customer")
     public CustomerResponseDto save(@RequestBody @Valid CustomerRequestDto customerRequestDto){
         return mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Find a customer.")
+    @Operation(summary = "Find a customer")
     public CustomerResponseDto findById(@PathVariable Long id){
         return mapper.map(customerService.findById(id), CustomerResponseDto.class);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Find all customers.")
+    @Operation(summary = "Find all customers")
     public Page<CustomerResponseDto> findAll(@PageableDefault(
             page = 0,
             size=3,
@@ -62,7 +62,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete a customer.")
+    @Operation(summary = "Delete a customer")
     public ResponseEntity<Object> deleteById(@PathVariable Long id){
         customerService.deleteById(id);
         return ResponseEntity.ok().body("Customer deleted successfully!");
@@ -70,7 +70,7 @@ public class CustomerController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Update a customer.")
+    @Operation(summary = "Update a customer")
     public CustomerResponseDto update(@PathVariable Long id, @RequestBody @Valid CustomerRequestDto customerRequestDto){
         var customer = customerService.update(customerRequestDto, id);
         return mapper.map(customer, CustomerResponseDto.class);
