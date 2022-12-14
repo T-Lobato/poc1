@@ -25,28 +25,18 @@ public class AddressService {
     public AddressResponseDto save(AddressRequestDto addressRequestDto) {
         Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
         Address address = mapper.map(addressRequestDto, Address.class);
-
-        if (customer.getAddressList().isEmpty()) {
-            address.setMainAddress(true);
-        }
-        if (customer.getAddressList().size() < 5) {
-            address.setCustomer(customer);
-            return mapper.map(addressRepository.save(address), AddressResponseDto.class);
-        } else {
-            throw new AddressLimitExceededException("Cannot add an address, this customer's address limit has been exceeded!");
-        }
+        setFirtAddressToMain(customer, address);
+        verifyCustomerAddressListSizeLimit(customer);
+        address.setCustomer(customer);
+        return mapper.map(addressRepository.save(address), AddressResponseDto.class);
     }
 
     @Transactional
     public AddressResponseDto update(AddressRequestDto addressRequestDto, Long id) {
-        Address address = mapper.map(findById(id), Address.class);
-        address.setState(addressRequestDto.getState());
-        address.setCity(addressRequestDto.getCity());
-        address.setDistrict(addressRequestDto.getDistrict());
-        address.setStreet(addressRequestDto.getStreet());
-        address.setHouseNumber(addressRequestDto.getHouseNumber());
-        address.setZipCode(addressRequestDto.getZipCode());
-        return mapper.map(addressRepository.save(address), AddressResponseDto.class);
+        Address address = mapper.map(addressRepository.findById(id), Address.class);
+        mapper.map(addressRequestDto, address);
+        addressRepository.save(address);
+        return mapper.map(address, AddressResponseDto.class);
     }
 
     public AddressResponseDto findById(Long id) {
@@ -77,5 +67,16 @@ public class AddressService {
             throw new MainAddressDeleteException("The main address can't be deleted!");
         }
         addressRepository.delete(address);
+    }
+
+    private void setFirtAddressToMain(Customer customer, Address address){
+        if (customer.getAddressList().isEmpty()) {
+            address.setMainAddress(true);
+        }
+    }
+
+    private void verifyCustomerAddressListSizeLimit(Customer customer){
+        if (customer.getAddressList().size() > 4)
+            throw new AddressLimitExceededException("Cannot add an address, this customer's address limit has been exceeded!");
     }
 }
