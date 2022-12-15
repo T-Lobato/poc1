@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,10 +54,26 @@ public class CustomerController {
     @Operation(summary = "Find all customers")
     public Page<CustomerResponseDto> findAll(@PageableDefault(
             page = 0,
-            size=3,
+            size = 3,
             sort={"name"},
+            direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false) String name){
+
+                // Apenas para estudo
+                // O método findCustomerByName realiza esta operação.
+                if(name == null) return customerService.findAll(pageable);
+                else return customerService.findByName(name, pageable);
+    }
+
+    @GetMapping("/filter")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<CustomerResponseDto> findCustomerByName(@RequestParam String name,@PageableDefault(
+            page = 0,
+            size = 3,
+            sort = {"name"},
             direction = Sort.Direction.ASC) Pageable pageable){
-                return customerService.findAll(pageable);
+
+        return customerService.findByName(name, pageable)
+                .map(n -> (mapper.map(n, CustomerResponseDto.class)));
     }
 
     @DeleteMapping("/{id}")

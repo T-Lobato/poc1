@@ -25,9 +25,11 @@ public class AddressService {
     public AddressResponseDto save(AddressRequestDto addressRequestDto) {
         Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
         Address address = mapper.map(addressRequestDto, Address.class);
-        setFirtAddressToMain(customer, address);
-        verifyCustomerAddressListSizeLimit(customer);
+
         address.setCustomer(customer);
+        setFirtAddressToMain(address);
+        verifyCustomerAddressListSizeLimit(customer);
+
         return mapper.map(addressRepository.save(address), AddressResponseDto.class);
     }
 
@@ -69,8 +71,8 @@ public class AddressService {
         addressRepository.delete(address);
     }
 
-    private void setFirtAddressToMain(Customer customer, Address address){
-        if (customer.getAddressList().isEmpty()) {
+    private void setFirtAddressToMain(Address address){
+        if (address.getCustomer().getAddressList().isEmpty()) {
             address.setMainAddress(true);
         }
     }
