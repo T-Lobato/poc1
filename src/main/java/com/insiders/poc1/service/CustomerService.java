@@ -35,6 +35,11 @@ public class CustomerService {
                 .map(n -> (mapper.map(n, CustomerResponseDto.class)));
     }
 
+    public Page<CustomerResponseDto> findByName(String name, Pageable pageable){
+        return customerRepository.findByNameContainsIgnoreCase(name, pageable)
+                .map(n -> (mapper.map(n, CustomerResponseDto.class)))                ;
+    }
+
     @Transactional
     public void deleteById(Long id) {
         Customer customer = mapper.map(this.findById(id), Customer.class);
