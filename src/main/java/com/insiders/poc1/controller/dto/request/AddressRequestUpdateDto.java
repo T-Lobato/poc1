@@ -10,15 +10,15 @@ public class AddressRequestUpdateDto {
 
     private Long customerRef;
 
-    private String uf;
-    private String localidade;
-    private String bairro;
-    private String logradouro;
+    private String state;
+    private String city;
+    private String district;
+    private String street;
 
     @NotBlank(message = "houseNumber is a required field!")
     private String houseNumber;
 
     @NotBlank(message = "zipCode is a required field!")
     @Length(min = 8, max = 8)
-    private String cep;
+    private String zipCode;
 }

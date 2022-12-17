@@ -1,6 +1,6 @@
 package com.insiders.poc1.service;
 
-import com.insiders.poc1.controller.dto.request.AddressRequestSaveDto;
+import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
 import com.insiders.poc1.integrations.ViaCepApi;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
@@ -26,18 +26,18 @@ public class AddressService {
     private final ViaCepApi viaCepApi;
 
     @Transactional
-    public AddressResponseDto save(AddressRequestSaveDto addressRequestSaveDto) throws IOException {
+    public AddressResponseDto save(AddressRequestDto addressRequestDto) throws IOException {
 
-        AddressRequestUpdateDto addressAux = viaCepApi.getCompleteAddress(addressRequestSaveDto.getCep());
+        AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestDto.getCep());
         Address address = new Address();
-        address.setZipCode(addressRequestSaveDto.getCep());
+        address.setZipCode(addressRequestDto.getCep());
         address.setState(addressAux.getUf());
         address.setCity(addressAux.getLocalidade());
         address.setDistrict(addressAux.getBairro());
         address.setStreet(addressAux.getLogradouro());
-        address.setHouseNumber(addressRequestSaveDto.getHouseNumber());
+        address.setHouseNumber(addressRequestDto.getHouseNumber());
 
-        Customer customer = mapper.map(customerService.findById(addressRequestSaveDto.getCustomerRef()), Customer.class);
+        Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
         address.setCustomer(customer);
 
         setFirstAddressToMain(address);
@@ -48,7 +48,9 @@ public class AddressService {
 
     @Transactional
     public AddressResponseDto update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
-        Address address = mapper.map(addressRepository.findById(id), Address.class);
+        Address address = mapper.map(addressRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),
+        Address.class);
         mapper.map(addressRequestUpdateDto, address);
         addressRepository.save(address);
         return mapper.map(address, AddressResponseDto.class);

@@ -6,9 +6,16 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Getter @Setter
-public class AddressRequestSaveDto {
+public class AddressRequestDto {
 
     private Long customerRef;
+
+    private String uf;
+    private String localidade;
+    private String bairro;
+    private String logradouro;
+
+    @NotBlank(message = "houseNumber is a required field!")
     private String houseNumber;
 
     @NotBlank(message = "zipCode is a required field!")

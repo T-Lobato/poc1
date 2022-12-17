@@ -1,6 +1,6 @@
 package com.insiders.poc1.controller;
 
-import com.insiders.poc1.controller.dto.request.AddressRequestSaveDto;
+import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.service.AddressService;
@@ -33,8 +33,8 @@ public class AddressController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save an address")
-    public AddressResponseDto save(@RequestBody @Valid AddressRequestSaveDto addressRequestSaveDto) throws Exception {
-        return addressService.save(addressRequestSaveDto);
+    public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto) throws Exception {
+        return addressService.save(addressRequestDto);
     }
 
     @PutMapping("/{id}")

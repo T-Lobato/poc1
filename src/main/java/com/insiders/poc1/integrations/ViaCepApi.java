@@ -1,7 +1,7 @@
 package com.insiders.poc1.integrations;
 
 import com.google.gson.Gson;
-import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
+import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -17,7 +17,7 @@ public class ViaCepApi {
 
     private final String VIA_CEP_URL = "https://viacep.com.br/ws/";
 
-    public AddressRequestUpdateDto getCompleteAddress(String cep) throws IOException {
+    public AddressRequestDto getCompleteAddress(String cep) throws IOException {
         String urlString =  VIA_CEP_URL + cep + "/json/";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(urlString);
@@ -32,7 +32,7 @@ public class ViaCepApi {
             }
             in.close();
             httpClient.close();
-            var address = new Gson().fromJson(responseString.toString(), AddressRequestUpdateDto.class);
+            var address = new Gson().fromJson(responseString.toString(), AddressRequestDto.class);
             if(address.getUf() == null) {
                 throw new RuntimeException("Cep não encontrado"); //TODO - Criar exceção para quando o cep não for encontrado.
             }
