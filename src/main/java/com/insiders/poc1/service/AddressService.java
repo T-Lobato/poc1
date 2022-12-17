@@ -1,7 +1,8 @@
 package com.insiders.poc1.service;
 
+import com.insiders.poc1.controller.dto.request.AddressRequestSaveDto;
+import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
 import com.insiders.poc1.integrations.ViaCepApi;
-import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.entities.Address;
 import com.insiders.poc1.entities.Customer;
@@ -25,18 +26,18 @@ public class AddressService {
     private final ViaCepApi viaCepApi;
 
     @Transactional
-    public AddressResponseDto save(AddressRequestDto addressRequestDto) throws IOException {
+    public AddressResponseDto save(AddressRequestSaveDto addressRequestSaveDto) throws IOException {
 
-        AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestDto.getCep());
+        AddressRequestUpdateDto addressAux = viaCepApi.getCompleteAddress(addressRequestSaveDto.getCep());
         Address address = new Address();
-        address.setZipCode(addressRequestDto.getCep());
+        address.setZipCode(addressRequestSaveDto.getCep());
         address.setState(addressAux.getUf());
         address.setCity(addressAux.getLocalidade());
         address.setDistrict(addressAux.getBairro());
         address.setStreet(addressAux.getLogradouro());
-        address.setHouseNumber(addressRequestDto.getHouseNumber());
+        address.setHouseNumber(addressRequestSaveDto.getHouseNumber());
 
-        Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
+        Customer customer = mapper.map(customerService.findById(addressRequestSaveDto.getCustomerRef()), Customer.class);
         address.setCustomer(customer);
 
         setFirstAddressToMain(address);
@@ -46,9 +47,9 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressResponseDto update(AddressRequestDto addressRequestDto, Long id) {
+    public AddressResponseDto update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
         Address address = mapper.map(addressRepository.findById(id), Address.class);
-        mapper.map(addressRequestDto, address);
+        mapper.map(addressRequestUpdateDto, address);
         addressRepository.save(address);
         return mapper.map(address, AddressResponseDto.class);
     }

@@ -42,19 +42,4 @@ public class Address {
 
     @Column(name = "main_address")
     private boolean mainAddress;
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", customer=" + customer +
-                ", state='" + state + '\'' +
-                ", city='" + city + '\'' +
-                ", district='" + district + '\'' +
-                ", street='" + street + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", mainAddress=" + mainAddress +
-                '}';
-    }
 }
