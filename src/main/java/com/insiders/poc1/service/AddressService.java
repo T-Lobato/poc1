@@ -26,7 +26,7 @@ public class AddressService {
     private final ViaCepApi viaCepApi;
 
     @Transactional
-    public AddressResponseDto save(AddressRequestDto addressRequestDto) throws IOException {
+    public AddressResponseDto save(AddressRequestDto addressRequestDto){
 
         AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestDto.getCep());
         Address address = new Address();

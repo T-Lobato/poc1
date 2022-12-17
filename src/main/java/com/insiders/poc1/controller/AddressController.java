@@ -33,7 +33,7 @@ public class AddressController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save an address")
-    public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto) throws Exception {
+    public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto){
         return addressService.save(addressRequestDto);
     }
 
