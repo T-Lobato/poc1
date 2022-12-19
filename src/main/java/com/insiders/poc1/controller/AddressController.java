@@ -34,14 +34,14 @@ public class AddressController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save an address")
     public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto){
-        return addressService.save(addressRequestDto);
+        return mapper.map(addressService.save(addressRequestDto), AddressResponseDto.class);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update an address")
     public AddressResponseDto update(@PathVariable Long id, @RequestBody @Valid AddressRequestUpdateDto addressRequestUpdateDto){
-        return addressService.update(addressRequestUpdateDto, id);
+        return mapper.map(addressService.update(addressRequestUpdateDto, id), AddressResponseDto.class);
     }
 
     @PatchMapping("/turn-into-main-address/{id}")
@@ -49,14 +49,14 @@ public class AddressController {
     @Operation(summary = "Update an address to main")
     public AddressResponseDto updateMainAddress(@PathVariable Long id){
         addressService.updateMainAddress(id);
-        return addressService.findById(id);
+        return mapper.map(addressService.findById(id), AddressResponseDto.class);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Find an address")
     public AddressResponseDto findById(@PathVariable Long id){
-        return addressService.findById(id);
+        return mapper.map(addressService.findById(id), AddressResponseDto.class);
     }
 
     @DeleteMapping("/{id}")

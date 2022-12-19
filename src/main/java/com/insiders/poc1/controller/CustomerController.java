@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/poc1/customers")
@@ -39,14 +38,14 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a customer")
     public CustomerResponseDto save(@RequestBody @Valid CustomerRequestDto customerRequestDto){
-        return customerService.save(customerRequestDto);
+        return mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Find a customer")
     public CustomerResponseDto findById(@PathVariable Long id){
-        return customerService.findById(id);
+        return mapper.map(customerService.findById(id), CustomerResponseDto.class);
     }
 
     @GetMapping
@@ -60,8 +59,12 @@ public class CustomerController {
 
                 // Apenas para estudo
                 // O método findCustomerByName realiza esta operação.
-                if(name == null) return customerService.findAll(pageable);
-                else return customerService.findByName(name, pageable);
+                if(name == null) {
+                    return customerService.findAll(pageable)
+                        .map(n -> (mapper.map(n, CustomerResponseDto.class)));
+        }
+                else return customerService.findByName(name, pageable)
+                        .map(n -> (mapper.map(n, CustomerResponseDto.class)));
     }
 
     @GetMapping("/filter")
@@ -87,6 +90,6 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update a customer")
     public CustomerResponseDto update(@PathVariable Long id, @RequestBody @Valid CustomerRequestDto customerRequestDto){
-        return customerService.update(customerRequestDto, id);
+        return mapper.map(customerService.update(customerRequestDto, id), CustomerResponseDto.class);
     }
 }
