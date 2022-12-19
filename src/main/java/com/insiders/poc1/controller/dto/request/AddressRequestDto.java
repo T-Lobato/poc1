@@ -19,6 +19,8 @@ public class AddressRequestDto {
     @NotBlank(message = "houseNumber is a required field!")
     private String houseNumber;
 
+    private String complement;
+
     @NotBlank(message = "zipCode is a required field!")
     @Length(min = 8, max = 8)
     @Pattern(regexp = "^[^\\D]{8}$", message = "this field only accepts numbers.")

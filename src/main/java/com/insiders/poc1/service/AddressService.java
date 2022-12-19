@@ -2,15 +2,14 @@ package com.insiders.poc1.service;
 
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
-import com.insiders.poc1.integrations.ViaCepApi;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.entities.Address;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.exception.AddressLimitExceededException;
 import com.insiders.poc1.exception.MainAddressDeleteException;
 import com.insiders.poc1.exception.ResourceNotFoundException;
+import com.insiders.poc1.integrations.ViaCepApi;
 import com.insiders.poc1.repository.AddressRepository;
-import java.io.IOException;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -36,6 +35,7 @@ public class AddressService {
         address.setDistrict(addressAux.getBairro());
         address.setStreet(addressAux.getLogradouro());
         address.setHouseNumber(addressRequestDto.getHouseNumber());
+        address.setComplement(addressRequestDto.getComplement());
 
         Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
         address.setCustomer(customer);
@@ -46,12 +46,20 @@ public class AddressService {
         return mapper.map(addressRepository.save(address), AddressResponseDto.class);
     }
 
-    @Transactional // TODO - Not using viacep api
+    @Transactional
     public AddressResponseDto update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
         Address address = mapper.map(addressRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),
         Address.class);
-        mapper.map(addressRequestUpdateDto, address);
+        AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestUpdateDto.getCep());
+        address.setZipCode(addressRequestUpdateDto.getCep());
+        address.setState(addressAux.getUf());
+        address.setCity(addressAux.getLocalidade());
+        address.setDistrict(addressAux.getBairro());
+        address.setStreet(addressAux.getLogradouro());
+        address.setComplement(addressRequestUpdateDto.getComplement());
+        address.setHouseNumber(addressRequestUpdateDto.getHouseNumber());
+
         addressRepository.save(address);
         return mapper.map(address, AddressResponseDto.class);
     }
