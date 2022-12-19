@@ -46,7 +46,7 @@ public class AddressService {
         return mapper.map(addressRepository.save(address), AddressResponseDto.class);
     }
 
-    @Transactional
+    @Transactional // TODO - Not using viacep api
     public AddressResponseDto update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
         Address address = mapper.map(addressRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),

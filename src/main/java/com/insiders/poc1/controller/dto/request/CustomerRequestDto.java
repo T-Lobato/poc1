@@ -42,6 +42,6 @@ public class CustomerRequestDto implements Serializable {
 
     @NotNull @NotEmpty
     @Length(min = 10, max = 11)
-    @Pattern(regexp = "^[^\\D]{8}$", message = "this field only accepts numbers.")
+    @Pattern(regexp = "^[^\\D]{11}$", message = "this field only accepts numbers.")
     private String phoneNumber;
 }

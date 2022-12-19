@@ -2,15 +2,15 @@ package com.insiders.poc1.integrations;
 
 import com.google.gson.Gson;
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
-import com.insiders.poc1.exception.ResourceNotFoundException;
+import com.insiders.poc1.exception.InvalidInputException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,15 +37,15 @@ public class ViaCepApi {
                 httpClient.close();
                 var address = new Gson().fromJson(responseString.toString(), AddressRequestDto.class);
                 if (address.getUf() == null) {
-                    throw new ResourceNotFoundException("The zip code entered is not valid!");
+                    throw new InvalidInputException("The zip code entered is not valid!");
                 }
                 return address;
             } else {
                 httpClient.close();
-                throw new ResourceNotFoundException("The zip code entered is not valid!");
+                throw new InvalidInputException("The zip code entered is not valid!");
             }
         } catch (IOException ex) {
-            throw new ResourceNotFoundException("Invalid zip code!");
+            throw new InvalidInputException("Invalid zip code!");
         }
     }
 }
