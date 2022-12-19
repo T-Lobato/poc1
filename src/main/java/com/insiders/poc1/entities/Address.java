@@ -35,6 +35,8 @@ public class Address {
 
     private String street;
 
+    private String complement;
+
     private String houseNumber;
 
     @Column(name = "zip_code")
