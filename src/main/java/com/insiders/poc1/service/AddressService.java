@@ -2,7 +2,6 @@ package com.insiders.poc1.service;
 
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
-import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.entities.Address;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.exception.AddressLimitExceededException;
@@ -12,7 +11,6 @@ import com.insiders.poc1.integrations.ViaCepApi;
 import com.insiders.poc1.repository.AddressRepository;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,11 +19,10 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final CustomerService customerService;
-    private final ModelMapper mapper;
     private final ViaCepApi viaCepApi;
 
     @Transactional
-    public AddressResponseDto save(AddressRequestDto addressRequestDto){
+    public Address save(AddressRequestDto addressRequestDto){
 
         AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestDto.getCep());
         Address address = new Address();
@@ -37,20 +34,18 @@ public class AddressService {
         address.setHouseNumber(addressRequestDto.getHouseNumber());
         address.setComplement(addressRequestDto.getComplement());
 
-        Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
+        Customer customer = customerService.findById(addressRequestDto.getCustomerRef());
         address.setCustomer(customer);
 
         setFirstAddressToMain(address);
         verifyCustomerAddressListSizeLimit(customer);
 
-        return mapper.map(addressRepository.save(address), AddressResponseDto.class);
+        return addressRepository.save(address);
     }
 
     @Transactional
-    public AddressResponseDto update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
-        Address address = mapper.map(addressRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),
-        Address.class);
+    public Address update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
+        Address address = this.findById(id);
         AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestUpdateDto.getCep());
         address.setZipCode(addressRequestUpdateDto.getCep());
         address.setState(addressAux.getUf());
@@ -61,20 +56,17 @@ public class AddressService {
         address.setHouseNumber(addressRequestUpdateDto.getHouseNumber());
 
         addressRepository.save(address);
-        return mapper.map(address, AddressResponseDto.class);
+        return address;
     }
 
-    public AddressResponseDto findById(Long id) {
-        return mapper.map(addressRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),
-                AddressResponseDto.class);
+    public Address findById(Long id) {
+        return addressRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found!"));
     }
 
     @Transactional
     public void updateMainAddress(Long id) {
-        Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Address not found!"));
-
+        Address address = this.findById(id);
         address.getCustomer().getAddressList()
                 .forEach(n -> {
                     n.setMainAddress(false);
@@ -87,7 +79,7 @@ public class AddressService {
 
     @Transactional
     public void deleteById(Long id) {
-        Address address = mapper.map(findById(id), Address.class);
+        Address address = this.findById(id);
         if(address.isMainAddress()) {
             throw new MainAddressDeleteException("The main address can't be deleted!");
         }
