@@ -1,6 +1,7 @@
 package com.insiders.poc1.controller;
 
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
+import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,8 +40,8 @@ public class AddressController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update an address")
-    public AddressResponseDto update(@PathVariable Long id, @RequestBody @Valid AddressRequestDto addressRequestDto){
-        return addressService.update(addressRequestDto, id);
+    public AddressResponseDto update(@PathVariable Long id, @RequestBody @Valid AddressRequestUpdateDto addressRequestUpdateDto){
+        return addressService.update(addressRequestUpdateDto, id);
     }
 
     @PatchMapping("/turn-into-main-address/{id}")

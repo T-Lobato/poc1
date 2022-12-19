@@ -1,6 +1,8 @@
 package com.insiders.poc1.service;
 
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
+import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
+import com.insiders.poc1.integrations.ViaCepApi;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
 import com.insiders.poc1.entities.Address;
 import com.insiders.poc1.entities.Customer;
@@ -8,6 +10,7 @@ import com.insiders.poc1.exception.AddressLimitExceededException;
 import com.insiders.poc1.exception.MainAddressDeleteException;
 import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.repository.AddressRepository;
+import java.io.IOException;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,23 +23,35 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final CustomerService customerService;
     private final ModelMapper mapper;
+    private final ViaCepApi viaCepApi;
 
     @Transactional
-    public AddressResponseDto save(AddressRequestDto addressRequestDto) {
-        Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
-        Address address = mapper.map(addressRequestDto, Address.class);
+    public AddressResponseDto save(AddressRequestDto addressRequestDto){
 
+        AddressRequestDto addressAux = viaCepApi.getCompleteAddress(addressRequestDto.getCep());
+        Address address = new Address();
+        address.setZipCode(addressRequestDto.getCep());
+        address.setState(addressAux.getUf());
+        address.setCity(addressAux.getLocalidade());
+        address.setDistrict(addressAux.getBairro());
+        address.setStreet(addressAux.getLogradouro());
+        address.setHouseNumber(addressRequestDto.getHouseNumber());
+
+        Customer customer = mapper.map(customerService.findById(addressRequestDto.getCustomerRef()), Customer.class);
         address.setCustomer(customer);
-        setFirtAddressToMain(address);
+
+        setFirstAddressToMain(address);
         verifyCustomerAddressListSizeLimit(customer);
 
         return mapper.map(addressRepository.save(address), AddressResponseDto.class);
     }
 
-    @Transactional
-    public AddressResponseDto update(AddressRequestDto addressRequestDto, Long id) {
-        Address address = mapper.map(addressRepository.findById(id), Address.class);
-        mapper.map(addressRequestDto, address);
+    @Transactional // TODO - Not using viacep api
+    public AddressResponseDto update(AddressRequestUpdateDto addressRequestUpdateDto, Long id) {
+        Address address = mapper.map(addressRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found!")),
+        Address.class);
+        mapper.map(addressRequestUpdateDto, address);
         addressRepository.save(address);
         return mapper.map(address, AddressResponseDto.class);
     }
@@ -71,7 +86,7 @@ public class AddressService {
         addressRepository.delete(address);
     }
 
-    private void setFirtAddressToMain(Address address){
+    private void setFirstAddressToMain(Address address){
         if (address.getCustomer().getAddressList().isEmpty()) {
             address.setMainAddress(true);
         }

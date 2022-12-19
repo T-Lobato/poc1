@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,5 +42,6 @@ public class CustomerRequestDto implements Serializable {
 
     @NotNull @NotEmpty
     @Length(min = 10, max = 11)
-    private String phoneNumber; //TODO mudar variável para Integer
+    @Pattern(regexp = "^[^\\D]{11}$", message = "this field only accepts numbers.")
+    private String phoneNumber;
 }
