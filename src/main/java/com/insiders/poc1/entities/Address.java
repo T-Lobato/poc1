@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,4 +45,7 @@ public class Address {
 
     @Column(name = "main_address")
     private boolean mainAddress;
+
+    @Version
+    private Long version;
 }

@@ -45,7 +45,6 @@ public class ValidationExceptionHandler {
                 exception.getMessage(),
                 request.getDescription(false),
                 LocalDateTime.now()
-
         );
     }
 }
