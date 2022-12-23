@@ -1,9 +1,10 @@
-package com.insiders.poc1.controller;
+package com.insiders.poc1.controller.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insiders.poc1.controller.CustomerController;
 import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
 import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.entities.Customer;
@@ -18,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,10 +27,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@WebMvcTest(controllers = CustomerController.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class CustomerControllerTest {
+class CustomerControllerIntegrationTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -93,25 +95,5 @@ class CustomerControllerTest {
         // Verify that the response is correct
         assertThat(actualResponse.getName()).isEqualTo(expectedResponse.getName());
         assertThat(actualResponse.getEmail()).isEqualTo(expectedResponse.getEmail());
-    }
-
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void findAll() {
-    }
-
-    @Test
-    void findCustomerByName() {
-    }
-
-    @Test
-    void deleteById() {
-    }
-
-    @Test
-    void update() {
     }
 }
