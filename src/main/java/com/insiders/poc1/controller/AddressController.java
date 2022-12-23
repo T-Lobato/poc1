@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,7 @@ public class AddressController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(value = "addressSave")
     @Operation(summary = "Save an address")
     public AddressResponseDto save(@RequestBody @Valid AddressRequestDto addressRequestDto){
         return mapper.map(addressService.save(addressRequestDto), AddressResponseDto.class);
@@ -39,6 +42,7 @@ public class AddressController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @CacheEvict(value = "addressUpdate")
     @Operation(summary = "Update an address")
     public AddressResponseDto update(@PathVariable Long id, @RequestBody @Valid AddressRequestUpdateDto addressRequestUpdateDto){
         return mapper.map(addressService.update(addressRequestUpdateDto, id), AddressResponseDto.class);
@@ -46,6 +50,7 @@ public class AddressController {
 
     @PatchMapping("/turn-into-main-address/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @CacheEvict(value = "addressUpdateMain")
     @Operation(summary = "Update an address to main")
     public AddressResponseDto updateMainAddress(@PathVariable Long id){
         addressService.updateMainAddress(id);
@@ -54,6 +59,7 @@ public class AddressController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Cacheable("findOneAddressById")
     @Operation(summary = "Find an address")
     public AddressResponseDto findById(@PathVariable Long id){
         return mapper.map(addressService.findById(id), AddressResponseDto.class);
@@ -61,6 +67,7 @@ public class AddressController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "addressDelete")
     @Operation(summary = "Delete an address")
     public void deleteById(@PathVariable Long id){
         addressService.deleteById(id);
