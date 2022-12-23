@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,6 +38,7 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(value = "customerSave")
     @Operation(summary = "Save a customer")
     public CustomerResponseDto save(@RequestBody @Valid CustomerRequestDto customerRequestDto){
         return mapper.map(customerService.save(customerRequestDto), CustomerResponseDto.class);
@@ -43,6 +46,7 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Cacheable("findOneCustomerById")
     @Operation(summary = "Find a customer")
     public CustomerResponseDto findById(@PathVariable Long id){
         return mapper.map(customerService.findById(id), CustomerResponseDto.class);
@@ -50,6 +54,7 @@ public class CustomerController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Cacheable("findAllCustomers")
     @Operation(summary = "Find all customers")
     public Page<CustomerResponseDto> findAll(@PageableDefault(
             page = 0,
@@ -69,6 +74,8 @@ public class CustomerController {
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
+    @Cacheable("findOneCustomerByName")
+    @Operation(summary = "Find a Customer By name")
     public Page<CustomerResponseDto> findCustomerByName(@RequestParam String name,@PageableDefault(
             page = 0,
             size = 3,
@@ -81,6 +88,7 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "customerDelete")
     @Operation(summary = "Delete a customer")
     public void deleteById(@PathVariable Long id){
         customerService.deleteById(id);
@@ -88,6 +96,7 @@ public class CustomerController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @CacheEvict(value = "customerUpdate")
     @Operation(summary = "Update a customer")
     public CustomerResponseDto update(@PathVariable Long id, @RequestBody @Valid CustomerRequestDto customerRequestDto){
         return mapper.map(customerService.update(customerRequestDto, id), CustomerResponseDto.class);
