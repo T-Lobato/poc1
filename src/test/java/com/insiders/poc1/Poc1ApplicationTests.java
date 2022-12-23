@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class Poc1ApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void main(){
+		Poc1Application.main(new String[] {});
 	}
-
 }

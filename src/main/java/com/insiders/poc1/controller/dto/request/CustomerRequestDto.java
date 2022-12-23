@@ -10,7 +10,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.groups.Default;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -22,6 +24,7 @@ import org.hibernate.validator.group.GroupSequenceProvider;
 @AllArgsConstructor
 @NoArgsConstructor
 @GroupSequenceProvider(CustomerGroupSequenceProvider.class)
+@Builder
 public class CustomerRequestDto implements Serializable {
 
     @NotNull
@@ -41,7 +44,7 @@ public class CustomerRequestDto implements Serializable {
     private String email;
 
     @NotNull @NotEmpty
-    @Length(min = 10, max = 11)
-    @Pattern(regexp = "^[^\\D]{11}$", message = "this field only accepts numbers.")
+//    @Length(min = 10, max = 11)
+    @Pattern(regexp = "^\\d{10,11}$", message = "This field only accepts numbers and must have between 10 and 11 characters filled in.")
     private String phoneNumber;
 }
