@@ -1,11 +1,11 @@
 spring:
-    profiles:
-        active: dev
-    jpa:
-        hibernate:
-            ddl-auto: update
-        properties:
-            hibernate:
-                jdbc:
-                    lob:
-                        non_contextual_creation: true
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
