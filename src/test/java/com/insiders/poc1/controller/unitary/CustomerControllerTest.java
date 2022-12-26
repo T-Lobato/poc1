@@ -1,67 +1,67 @@
 package com.insiders.poc1.controller.unitary;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.insiders.poc1.controller.CustomerController;
+import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
+import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.enums.PersonType;
 import com.insiders.poc1.service.CustomerService;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class CustomerControllerTest {
+@ExtendWith(MockitoExtension.class)
+public class CustomerControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private CustomerController customerController;
 
-    @Autowired
     private CustomerService customerService;
 
-    private Customer customer;
+    private ModelMapper mapper;
 
-    static String CUSTOMER_API = "/api/poc1/customers";
+    @BeforeEach
+    public void setup() {
+        customerService = mock(CustomerService.class);
+        mapper = new ModelMapper();
+        customerController = new CustomerController(mapper, customerService);
+    }
 
-    protected void saveCustomer(){
-        customer = Customer.builder()
+    @Test
+    @DisplayName("Must successfully receive a customerRequest and return a CustomerResponse")
+    public void testSave() {
+        // Cria um DTO de solicitação com os valores desejados
+        CustomerRequestDto customerRequestDto = CustomerRequestDto.builder()
                 .name("Thyago")
+                .document("12633821774")
                 .personType(PersonType.PF)
                 .email("thyagollobato@gmail.com")
                 .phoneNumber("15981229370")
-                .addressList(new ArrayList<>())
                 .build();
-    }
 
+        // Cria uma instância de Customer usando o DTO de solicitação
+        Customer customer = mapper.map(customerRequestDto, Customer.class);
 
-    @Test
-    @DisplayName("Must sucessfully create a customer")
-    void saveACustomer() throws Exception {
-        URI uri = new URI(CUSTOMER_API);
-        String json = "{\"name\":\"Thyago\"," +
-                "\"document\":\"12633821774\"," +
-                "\"personType\":\"PF\"," +
-                "\"email\":\"thyagollobato@gmail.com\"," +
-                "\"phoneNumber\":\"15981229370\"}";
+        // Configura o mock do serviço para retornar a instância de Customer quando o método "save()" for chamado
+        when(customerService.save(customerRequestDto)).thenReturn(customer);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.
-                        status()
-                        .is(201));
+        // Chama o método "save()" da controller
+        CustomerResponseDto customerResponseDto = customerController.save(customerRequestDto);
+
+        // Verifica se o método "save()" do serviço foi chamado corretamente
+        verify(customerService).save(customerRequestDto);
+
+        // Verifica se o método "save()" da controller retornou o DTO de resposta esperado
+        assertEquals(customer.getId(), customerResponseDto.getId());
+        assertEquals(customer.getName(), customerResponseDto.getName());
+        assertEquals(customer.getEmail(), customerResponseDto.getEmail());
+        assertEquals(customer.getAddressList(), customerResponseDto.getAddressList());
     }
 }
