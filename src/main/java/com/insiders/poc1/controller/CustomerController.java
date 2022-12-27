@@ -2,6 +2,7 @@ package com.insiders.poc1.controller;
 
 import com.insiders.poc1.controller.dto.request.CustomerRequestDto;
 import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
+import com.insiders.poc1.controller.dto.response.CustomerResponseV2Dto;
 import com.insiders.poc1.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +51,14 @@ public class CustomerController {
     @Operation(summary = "Find a customer")
     public CustomerResponseDto findById(@PathVariable Long id){
         return mapper.map(customerService.findById(id), CustomerResponseDto.class);
+    }
+
+    @GetMapping("/v2/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable("findOneCustomerById")
+    @Operation(summary = "Find a customer")
+    public CustomerResponseV2Dto findByIdV2(@PathVariable Long id){
+        return mapper.map(customerService.findById(id), CustomerResponseV2Dto.class);
     }
 
     @GetMapping
