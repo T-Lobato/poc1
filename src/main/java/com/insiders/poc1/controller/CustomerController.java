@@ -55,8 +55,8 @@ public class CustomerController {
 
     @GetMapping("/v2/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Cacheable("findOneCustomerById")
-    @Operation(summary = "Find a customer")
+    @Cacheable("findOneCustomerByIdV2")
+    @Operation(summary = "Find a customer V2")
     public CustomerResponseV2Dto findByIdV2(@PathVariable Long id){
         return mapper.map(customerService.findById(id), CustomerResponseV2Dto.class);
     }
@@ -70,14 +70,7 @@ public class CustomerController {
             size = 3,
             sort={"name"},
             direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false) String name){
-
-                // Apenas para estudo
-                // O método findCustomerByName realiza esta operação.
-                if(name == null) {
                     return customerService.findAll(pageable)
-                        .map(n -> (mapper.map(n, CustomerResponseDto.class)));
-        }
-                else return customerService.findByName(name, pageable)
                         .map(n -> (mapper.map(n, CustomerResponseDto.class)));
     }
 
