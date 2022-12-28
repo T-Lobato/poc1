@@ -12,12 +12,20 @@ import com.insiders.poc1.controller.dto.response.CustomerResponseV2Dto;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.enums.PersonType;
 import com.insiders.poc1.service.CustomerService;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 
 @ExtendWith(MockitoExtension.class)
 public class CustomerControllerTest {
@@ -37,7 +45,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully receive a customerRequest and return a CustomerResponse")
-    public void testSave() {
+     void testSave() {
         // Cria um DTO de solicitação com os valores desejados
         CustomerRequestDto customerRequestDto = CustomerRequestDto.builder()
                 .name("Thyago")
@@ -68,7 +76,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully receive an id and return a CustomerResponse")
-    public void testFindById() {
+     void testFindById() {
         // Cria um id
         Long id = 1L;
         // Cria um Customer
@@ -95,9 +103,10 @@ public class CustomerControllerTest {
         assertEquals(customer.getEmail(), customerResponseDto.getEmail());
         assertEquals(customer.getAddressList(), customerResponseDto.getAddressList());
     }
+
     @Test
     @DisplayName("Must successfully receive an id and return a CustomerResponseV2")
-    public void testFindByIdV2(){
+     void testFindByIdV2() {
         // Cria um id
         Long id = 1L;
         // Cria um customer
@@ -128,18 +137,62 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testFindAll() {
-        //TODO
+    @DisplayName("Must successfully return a page of customers")
+     void testFindAll() {
+        // Cria uma instância de Pageable
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("name").ascending());
+        // Cria uma lista de customers
+        List<Customer> customers = Arrays.asList(
+                Customer.builder().id(1L).name("Thyago").build(),
+                Customer.builder().id(2L).name("Lucas").build(),
+                Customer.builder().id(3L).name("Mauricio").build()
+        );
+        // Configura o mock do CustomerService para retornar uma Page de customers quando o método findAll() for chamado com o Pageable
+        when(customerService.findAll(pageable)).thenReturn(new PageImpl<>(customers, pageable, customers.size()));
+
+        // Chama o método findAll() da controller
+        Page<CustomerResponseDto> customerResponseDtos = customerController.findAll(pageable, null);
+
+        // Verifica se o método findAll() do serviço foi chamado corretamente
+        verify(customerService).findAll(pageable);
+
+        // Verifica se o método findAll() da controller retornou a Page de DTOs de resposta esperada
+        assertEquals(customers.size(), customerResponseDtos.getTotalElements());
+        assertEquals(customers.get(0).getId(), customerResponseDtos.getContent().get(0).getId());
+        assertEquals(customers.get(1).getId(), customerResponseDtos.getContent().get(1).getId());
+        assertEquals(customers.get(2).getId(), customerResponseDtos.getContent().get(2).getId());
     }
 
     @Test
-    public void testFindCustomerByName() {
-        // TODO
+    @DisplayName("Must successfully return a page of customers filtered by name")
+     void testFindCustomerByName() {
+        // Cria uma instância de Pageable
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("name").ascending());
+        // Cria uma lista de customers
+        List<Customer> customers = Arrays.asList(
+                Customer.builder().id(1L).name("Thyago").build(),
+                Customer.builder().id(2L).name("Thyago").build(),
+                Customer.builder().id(3L).name("Thyago").build()
+        );
+        // Configura o mock do CustomerService para retornar uma Page de customers quando o método findByName() for chamado com o nome e o Pageable
+        when(customerService.findByName("Thyago", pageable)).thenReturn(new PageImpl<>(customers, pageable, customers.size()));
+
+        // Chama o método findCustomerByName() da controller
+        Page<CustomerResponseDto> customerResponseDtos = customerController.findCustomerByName("Thyago", pageable);
+
+        // Verifica se o método findByName() do serviço foi chamado corretamente
+        verify(customerService).findByName("Thyago", pageable);
+
+        // Verifica se o método findCustomerByName() da controller retornou a Page de DTOs de resposta esperada
+        assertEquals(customers.size(), customerResponseDtos.getTotalElements());
+        assertEquals(customers.get(0).getId(), customerResponseDtos.getContent().get(0).getId());
+        assertEquals(customers.get(1).getId(), customerResponseDtos.getContent().get(1).getId());
+        assertEquals(customers.get(2).getId(), customerResponseDtos.getContent().get(2).getId());
     }
 
     @Test
     @DisplayName("Must successfully delete a customer")
-    public void testDeleteById() {
+     void testDeleteById() {
         // Define o valor do parâmetro "id"
         Long id = 1L;
 
@@ -152,7 +205,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully update a customer")
-    public void testUpdate() {
+     void testUpdate() {
         // Define o valor do parâmetro "id"
         Long id = 1L;
 
