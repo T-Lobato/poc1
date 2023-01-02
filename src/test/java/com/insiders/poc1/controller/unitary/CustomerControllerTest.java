@@ -1,6 +1,7 @@
 package com.insiders.poc1.controller.unitary;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +12,7 @@ import com.insiders.poc1.controller.dto.response.CustomerResponseDto;
 import com.insiders.poc1.controller.dto.response.CustomerResponseV2Dto;
 import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.enums.PersonType;
+import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.service.CustomerService;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,6 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +41,7 @@ public class CustomerControllerTest {
     private ModelMapper mapper;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         customerService = mock(CustomerService.class);
         mapper = new ModelMapper();
         customerController = new CustomerController(mapper, customerService);
@@ -45,7 +49,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully receive a customerRequest and return a CustomerResponse")
-     void testSave() {
+    void testSave() {
         // Cria um DTO de solicitação com os valores desejados
         CustomerRequestDto customerRequestDto = CustomerRequestDto.builder()
                 .name("Thyago")
@@ -76,7 +80,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully receive an id and return a CustomerResponse")
-     void testFindById() {
+    void testFindById() {
         // Cria um id
         Long id = 1L;
         // Cria um Customer
@@ -105,8 +109,20 @@ public class CustomerControllerTest {
     }
 
     @Test
+    @DisplayName("Must return 404 when id does not exist")
+    void testFindByIdNotFound() {
+        // Cria um id
+        Long id = 1L;
+        // Configura o mock do CustomerService para lançar uma exceção do tipo ResourceNotFoundException quando o método findById() for chamado com o id
+        when(customerService.findById(id)).thenThrow(new ResourceNotFoundException("Customer Not Found!"));
+
+        // Verifica se o método findById() da CustomerController lança uma exceção do tipo ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> customerController.findById(id));
+    }
+
+    @Test
     @DisplayName("Must successfully receive an id and return a CustomerResponseV2")
-     void testFindByIdV2() {
+    void testFindByIdV2() {
         // Cria um id
         Long id = 1L;
         // Cria um customer
@@ -138,7 +154,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully return a page of customers")
-     void testFindAll() {
+    void testFindAll() {
         // Cria uma instância de Pageable
         Pageable pageable = PageRequest.of(0, 3, Sort.by("name").ascending());
         // Cria uma lista de customers
@@ -165,7 +181,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully return a page of customers filtered by name")
-     void testFindCustomerByName() {
+    void testFindCustomerByName() {
         // Cria uma instância de Pageable
         Pageable pageable = PageRequest.of(0, 3, Sort.by("name").ascending());
         // Cria uma lista de customers
@@ -192,7 +208,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully delete a customer")
-     void testDeleteById() {
+    void testDeleteById() {
         // Define o valor do parâmetro "id"
         Long id = 1L;
 
@@ -205,7 +221,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must successfully update a customer")
-     void testUpdate() {
+    void testUpdate() {
         // Define o valor do parâmetro "id"
         Long id = 1L;
 
