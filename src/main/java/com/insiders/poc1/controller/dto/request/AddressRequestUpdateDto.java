@@ -2,11 +2,17 @@ package com.insiders.poc1.controller.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddressRequestUpdateDto {
 
     @NotBlank(message = "houseNumber is a required field!")
