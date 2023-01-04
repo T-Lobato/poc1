@@ -1,4 +1,4 @@
-package com.insiders.poc1.controller;
+package com.insiders.poc1.controller.unitary;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.insiders.poc1.controller.AddressController;
 import com.insiders.poc1.controller.dto.request.AddressRequestDto;
 import com.insiders.poc1.controller.dto.request.AddressRequestUpdateDto;
 import com.insiders.poc1.controller.dto.response.AddressResponseDto;
