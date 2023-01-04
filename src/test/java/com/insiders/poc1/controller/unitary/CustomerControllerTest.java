@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -28,7 +27,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -153,7 +151,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    @DisplayName("Must successfully return a page of customers")
+    @DisplayName("Must successfully return a page of customerReponse")
     void testFindAll() {
         // Cria uma instância de Pageable
         Pageable pageable = PageRequest.of(0, 3, Sort.by("name").ascending());
