@@ -1,4 +1,4 @@
-package com.insiders.poc1.service;
+package com.insiders.poc1.service.unitary;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,6 +13,7 @@ import com.insiders.poc1.entities.Customer;
 import com.insiders.poc1.enums.PersonType;
 import com.insiders.poc1.exception.ResourceNotFoundException;
 import com.insiders.poc1.repository.CustomerRepository;
+import com.insiders.poc1.service.CustomerService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +67,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("Must successfully receive a customerRequest and return a Customer")
+    @DisplayName("Must successfully receive a customerRequestDto and save a Customer")
     void testSave() {
 
         // Cria uma instância de Customer usando o DTO de solicitação
@@ -102,7 +103,7 @@ class CustomerServiceTest {
         // Chama o método findById() da CustomerService
         Customer customer = customerService.findById(id);
 
-        // Verifica se o método findById() do mock do CustomerService foi chamado corretamente
+        // Verifica se o método findById() do mock do customerRepository foi chamado corretamente
         verify(customerRepository).findById(id);
 
         // Verifica se o método findById() da CustomerService retornou o Customer esperado
@@ -121,7 +122,7 @@ class CustomerServiceTest {
         Long id = 1L;
 
         // Configura o mock do CustomerRepository para retornar um objeto Optional vazio
-        // quando o método findById() é chamado com o id
+        // quando o método findById() é chamado
         when(customerRepository.findById(id)).thenReturn(Optional.empty());
 
         // Espera que a exceção ResourceNotFoundException seja lançada pelo método findById()

@@ -86,13 +86,13 @@ public class AddressService {
         addressRepository.delete(address);
     }
 
-    private void setFirstAddressToMain(Address address){
+    public void setFirstAddressToMain(Address address){
         if (address.getCustomer().getAddressList().isEmpty()) {
             address.setMainAddress(true);
         }
     }
 
-    private void verifyCustomerAddressListSizeLimit(Customer customer){
+    public void verifyCustomerAddressListSizeLimit(Customer customer){
         if (customer.getAddressList().size() > 4)
             throw new AddressLimitExceededException("Cannot add an address, this customer's address limit has been exceeded!");
     }
