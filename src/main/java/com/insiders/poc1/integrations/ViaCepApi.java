@@ -45,7 +45,7 @@ public class ViaCepApi {
                 throw new InvalidInputException("The zip code entered is not valid!");
             }
         } catch (IOException ex) {
-            throw new InvalidInputException("Invalid zip code!");
+            throw new InvalidInputException("The zip code entered is not valid!");
         }
     }
 }

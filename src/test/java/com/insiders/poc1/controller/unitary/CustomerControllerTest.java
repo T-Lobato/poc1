@@ -108,7 +108,7 @@ public class CustomerControllerTest {
 
     @Test
     @DisplayName("Must return 404 when id does not exist")
-    void testFindByIdNotFound() {
+    void testIdNotFound() {
         // Cria um id
         Long id = 1L;
         // Configura o mock do CustomerService para lançar uma exceção do tipo ResourceNotFoundException quando o método findById() for chamado com o id
