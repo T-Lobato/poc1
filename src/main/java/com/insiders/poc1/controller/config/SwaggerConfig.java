@@ -1,4 +1,4 @@
-package com.insiders.poc1.config;
+package com.insiders.poc1.controller.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

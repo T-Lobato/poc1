@@ -1,4 +1,4 @@
-package com.insiders.poc1.config;
+package com.insiders.poc1.controller.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
