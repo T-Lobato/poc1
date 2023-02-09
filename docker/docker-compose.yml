@@ -1,14 +1,19 @@
 version: '3.8'
-
 services:
-  mysql:
-    image: mysql:8.0.22
-    container_name: mysqldb
-    ports:
-      - 3306:3306
+  db:
+    container_name: mysqldb-poc1
+    image: mysql
+    volumes:
+      - db_data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: poc1
-      MYSQL_USER: root
+      MYSQL_DATABASE: api
+      MYSQL_USER: user
       MYSQL_PASSWORD: root
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+volumes:
+  db_data: { }
